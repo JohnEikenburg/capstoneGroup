@@ -3,12 +3,12 @@ import WebRTC
 import SocketIO
 
 class WebRTCViewModel: ObservableObject {
-    // Socket handles signaling between the phone and Raspi
+    // WebRTC needs some kind of actual connection in order to be created. This connection is made via SocketIO.
     private var socket: SocketIOClient!
-    // Variables to establish peer connection between phone and Raspi (factory creates the peer connections)
+    // Variables to establish peer connection between phone and Raspi.
     private var peerConnectionFactory: RTCPeerConnectionFactory!
     private var peerConnection: RTCPeerConnection?
-    // Variables to display the Raspi video (displaying and rendering using Metal)
+    // Variables to display the Raspi video (displaying and rendering using Metal).
     private var remoteVideoTrack: RTCVideoTrack?
     private var videoView: RTCMTLVideoView?
 
@@ -16,17 +16,18 @@ class WebRTCViewModel: ObservableObject {
         setupWebRTC()
     }
 
-    // Set up WebRTC
+    // Set up WebRTC.
     func setupWebRTC() {
         peerConnectionFactory = RTCPeerConnectionFactory()
-        // Make the view for displaying video
+        // Make the view for displaying video.
         videoView = RTCMTLVideoView(frame: .zero)
         setupWebSocket()
     }
 
-    // Set up WebSocket connection to Raspi server. Handles signaling
+    // Set up WebSocket connection to Raspi server. Handles signaling.
     func setupWebSocket() {
-        // Raspi's IP on the local network needed
+        // Raspi's IP on the local network (its own WiFi) needed.
+        // *********** This is undergoing revision. **********
         let socketManager = SocketManager(socketURL: URL(string: "ws://<raspberry_pi_ip>:8765")!, config: [.log(true), .compress])
         socket = socketManager.defaultSocket
 
@@ -61,6 +62,8 @@ class WebRTCViewModel: ObservableObject {
         let offer = RTCSessionDescription(type: .offer, sdp: "Offer SDP here")
         socket.emit("offer", ["sdp": offer.sdp, "type": offer.type.rawValue])
     }
+
+    // ******** I have been getting many errors with the rest of the commands below. *******
 
     // Parses SDP answer from Raspi's JSON format and makes an RTCSessionDescription
     /* func handleSDPAnswer(_ answer: [String: Any]) {
