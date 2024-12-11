@@ -66,19 +66,6 @@ class WebRTCViewModel: ObservableObject {
     // ******** I have been getting many errors with the rest of the commands below. *******
 
     // Parses SDP answer from Raspi's JSON format and makes an RTCSessionDescription
-    /* func handleSDPAnswer(_ answer: [String: Any]) {
-        // Handle the SDP Answer received from Raspberry Pi
-        if let sdpString = answer["sdp"] as? String, let typeString = answer["type"] as? String,
-            let type = RTCSessionDescription.Type(rawValue: typeString) {
-            let answerSDP = RTCSessionDescription(type: type, sdp: sdpString)
-            peerConnection?.setRemoteDescription(answerSDP, completionHandler: { error in
-                if let error = error {
-                    print("Error setting remote description: \(error)")
-                }
-            })
-        }
-    } */
-    
     func handleSDPAnswer(_ answer: [String: Any]) {
         // Handle the SDP Answer received from Raspberry Pi
         if let sdpString = answer["sdp"] as? String, let typeString = answer["type"] as? String {
